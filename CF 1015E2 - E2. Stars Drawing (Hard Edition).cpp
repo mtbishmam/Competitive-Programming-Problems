@@ -112,6 +112,7 @@ int main()
                 }
             }
         }
+        
         // for (auto& i : b) debug(i);
         if (b == a) {
             cout << sz(ans) << endl;
