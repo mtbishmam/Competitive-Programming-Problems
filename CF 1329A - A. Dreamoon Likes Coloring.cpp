@@ -77,20 +77,15 @@ int main()
         cin >> a;
         ll cs = accumulate(all(a), 0ll);
         if (m <= cs and cs <= m * (m + 1ll) / 2) {
-            bool ok = 1;
-            vi b(m); iota(all(b), 1);
-            reverse(all(b));
-            // cout << b << endl;
-            for (int i = 0; i < n; i++) {
-                if (a[i] > b[i]) ok = 0;
-            }
             vl suf(n + 1); suf[n - 1] = a[n - 1];
             for (int i = n - 2; i >= 0; i--)
                 suf[i] = suf[i + 1] + a[i];
-            vi ans(n);
+            vi ans(n); bool ok = 1;
             for (int i = 1, j = 0; i <= m; i++) {
                 if (j < n and i + a[j] - 1 + suf[j + 1] >= m) {
-                    ans[j++] = i;
+                    if (i + a[j] - 1 <= m)
+                        ans[j++] = i;
+                    else ok = 0;
                 }
             }
             vi col(m + 1); int id = 1;
