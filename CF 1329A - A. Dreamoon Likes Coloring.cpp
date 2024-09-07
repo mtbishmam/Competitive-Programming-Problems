@@ -10,6 +10,7 @@
 #include <math.h>
 #include <iomanip>
 #include <cstring>
+#include <cassert>
 using namespace std;
 
 #define endl "\n"
@@ -44,6 +45,7 @@ template <class A, class B> using umap = unordered_map<A, B>;
 
 #define all(x) (x).begin(), (x).end()
 #define rall(x) (x).rbegin(), (x).rend()
+#define bug cerr << "!Bugged..." << endl
 #define add(x, y) (x + y >= MOD ? x + y - MOD : x + y)
 
 const string cq[2] = {"NO", "YES"};
@@ -71,44 +73,45 @@ int main()
     {
         int m, n;
         cin >> m >> n;
-        vi a(n), ans(n); cin >> a;
-        vl suf(n + 2);
-        for (int i = n - 1; i >= 0; i--)
-            suf[i] = suf[i + 1] + a[i];
-        bool ok = 1;
-        if (suf[0] < n) ok = 0;
-        else {
+        vi a(n);
+        cin >> a;
+        ll cs = accumulate(all(a), 0ll);
+        if (m <= cs and cs <= m * (m + 1ll) / 2) {
+            bool ok = 1;
             vi b(m); iota(all(b), 1);
             reverse(all(b));
             // cout << b << endl;
-            for (int i = 0; i < min(n, m); i++) {
+            for (int i = 0; i < n; i++) {
                 if (a[i] > b[i]) ok = 0;
             }
-            // debug(ok);
-            vl pre(m + 1); int col = 1;
+            vl suf(n + 1); suf[n - 1] = a[n - 1];
+            for (int i = n - 2; i >= 0; i--)
+                suf[i] = suf[i + 1] + a[i];
+            vi ans(n);
             for (int i = 1, j = 0; i <= m; i++) {
-                if (j < n and (i + a[j] - 1) + suf[j + 1] >= m) {
-                    pre[i] = col++;
-                    ans[j] = i;
-                    j++;
+                if (j < n and i + a[j] - 1 + suf[j + 1] >= m) {
+                    ans[j++] = i;
                 }
             }
-            int prev = 0;
-            for (int i = 1; i <= m; ++i) {
-                if (!pre[i]) pre[i] = pre[i - 1];
+            vi col(m + 1); int id = 1;
+            for (int i = 0; i < n; i++) {
+                col[ans[i]] = id++;
             }
-
+            int prev = 1;
+            for (int i = 1; i <= m; i++) {
+                if (col[i]) prev = col[i];
+                col[i] = prev;
+            }
+            // cout << col << endl;
             set<int> s;
-            for (int i = 1; i <= m; ++i) {
-                if (pre[i] == 0) ok = 0;
-                s.em(pre[i]);
+            for (int i = 1; i <= m; i++) {
+                if (!col[i]) ok = 0;
+                s.em(col[i]);
             }
-            if (s.size() != n) ok = 0;
-        }
-        if (ok) {
-            cout << ans;
-        }
-        else cout << -1;
+            if (s.size() != n or !ok) cout << -1;
+            else cout << ans;
+        } else cout << -1;
+
     }
     return 0;
 }
