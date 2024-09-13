@@ -71,44 +71,64 @@ int main()
     {
         int n;
         cin >> n;
-        vi a(n);
-        vb vis(n);
+        vi a(n), ones;
+        // vb vis(n);
         for (int i = 0; i < n; i++) {
             cin >> a[i];
-            vis[i] = a[i];
-        }
-
-        ll ans = 0;
-        auto set = [&](int idx) {
-            vis[idx] = 1;
-        };
-        for (int i = 0; i < n; i++) {
-            if (a[i] == 1) {
-                int l = -1, r = -1;
-                for (int j = i - 1; j >= 0; j--) {
-                    if (!a[j] and !vis[j]) {
-                        l = j;
-                        break;
-                    }
-                }
-                for (int j = i + 1; j < n; j++) {
-                    if (!a[j] and !vis[j]) {
-                        r = j;
-                        break;
-                    }
-                }
-                if (l == -1 or r == -1) {
-                    if (l == -1) ans += r - i, set(r);
-                    else ans += i - l, set(l);
-                }
-                else {
-                    int ld = i - l, rd = r - i;
-                    if (ld <= rd) set(l), ans += ld;
-                    else set(r), ans += rd;
-                }
+            if (a[i]) {
+                ones.eb(i);
+                // vis[i] = 1;
             }
         }
-        cout << ans;
+        int m = ones.size();
+        vvl dp(n, vl(n, -1));
+        function<ll(int, int)> f = [&](int i, int j) -> int {
+            if (j == m) return 0;
+            if (i == n) return INF;
+            ll& ret = dp[i][j];
+            if (~ret) return ret;
+
+            ret = INF;
+            if (a[i]) ret = f(i + 1, j);
+            else {
+                ret = abs(i - ones[j]) + f(i + 1, j + 1);
+                ret = min(ret, f(i + 1, j));
+            }
+            return ret;
+        };
+        cout << f(0, 0) << endl;
+
+        // ll ans = 0;
+        // auto set = [&](int idx) {
+        //     vis[idx] = 1;
+        // };
+        // for (int i = 0; i < n; i++) {
+        //     if (a[i] == 1) {
+        //         int l = -1, r = -1;
+        //         for (int j = i - 1; j >= 0; j--) {
+        //             if (!a[j] and !vis[j]) {
+        //                 l = j;
+        //                 break;
+        //             }
+        //         }
+        //         for (int j = i + 1; j < n; j++) {
+        //             if (!a[j] and !vis[j]) {
+        //                 r = j;
+        //                 break;
+        //             }
+        //         }
+        //         if (l == -1 or r == -1) {
+        //             if (l == -1) ans += r - i, set(r);
+        //             else ans += i - l, set(l);
+        //         }
+        //         else {
+        //             int ld = i - l, rd = r - i;
+        //             if (ld <= rd) set(l), ans += ld;
+        //             else set(r), ans += rd;
+        //         }
+        //     }
+        // }
+        // cout << ans;
     }
     return 0;
 }
