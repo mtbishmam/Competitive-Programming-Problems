@@ -46,7 +46,7 @@ template <class A, class B> using umap = unordered_map<A, B>;
 #define rall(x) (x).rbegin(), (x).rend()
 #define add(x, y) (x + y >= MOD ? x + y - MOD : x + y)
 
-const vs cq = {"NO", "YES"};
+const string cq[2] = {"NO", "YES"};
 const int dx[8] = { -1,  0, 0, 1, 1,  1, -1, -1};
 const int dy[8] = { 0, -1, 1, 0, 1, -1,  1, -1};
 const int INF = 2147483647;
@@ -88,19 +88,53 @@ int main()
                     sz[node] += sz[child];
                 }
         }; f(1, -1);
+        // cout << sz << endl;
         bool ok = 1;
-        function<void(int, int)> chk = [&](int node, int par) {
-            int tot = sz[node];
-            int given = h[node];
+        vpii mood(n + 1);
+        function<void(int, int, int, int)> chk = [&](int node, int par, int phap, int psed) {
+            int tot = sz[node], given = h[node];
             int _2h = tot + given;
-            int hap = _2h / 2;
-            int sed = tot - hap;
-            // cout << node << " " << hap << ' ' << sed << endl;
+            int hap = _2h / 2, sed = tot - hap;
+            mood[node] = {hap, sed};
+
+            bool f = 0;
             if (hap < 0 or sed < 0 or _2h % 2 or hap + sed != tot) ok = 0;
+
+            // if (sed > phap) ok = 0 // sure...
+            // if (psed >= sed and phap >= psed - sed);
+            // else ok = 0;
+
+            // all child sed cnt >= node sed cnt..
+            // all child new seds <= node hap cnt...
+
+            // if(sed > phap or hap > phap) {
+            //     ok = 0;
+            //     debug(phap, psed);
+            //     debug(hap, sed);
+            // }
+
+            // if (sed > psed) ok = 0;
+
+            int cntsed = 0, cnthap = 0, leaf = 1;
             for (auto& child : g[node]) {
-                if (child != par) chk(child, node);
+                if (child != par) {
+                    chk(child, node, hap, sed);
+                    cnthap += mood[child].ff;
+                    cntsed += mood[child].ss;
+                    leaf = 0;
+                }
             }
-        }; chk(1, -1);
+            if (ok) {f = 1;}
+            if (!leaf) {
+                if (cntsed - sed <= hap and hap >= cnthap);
+                else ok = 0;
+            }
+            if (f and !ok) {
+                // debug(node);
+                // debug(cntsed, cnthap);
+                // debug(sed, hap);
+            }
+        }; chk(1, -1, INF, INF);
 
         cout << cq[ok] << endl;
 
