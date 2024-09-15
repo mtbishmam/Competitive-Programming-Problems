@@ -95,8 +95,6 @@ template<class T> struct segtree {
     void update(int L, int R, T cur) { update(L, R, cur, 1, 1, n - 1); }
 };
 int a[maxn], pre[maxn + 5], cnt[maxn + 5], ncnt[maxn + 5];
-map<int, int> mp;
-
 int main()
 {
 #ifndef ONLINE_JUDGE
@@ -121,10 +119,8 @@ int main()
         }
         sort(all(un));
         un.erase(unique(all(un)), un.end());
-        int id = 1;
-        for (auto& i : un) mp[i] = id++;
         for (int i = 0; i < n; i++) {
-            a[i] = mp[a[i]];
+            a[i] = lb(all(un), a[i]) - un.begin() + 1;
             cnt[a[i]]++;
         }
         for (int i = 1; i <= maxn + 1; i++) {
