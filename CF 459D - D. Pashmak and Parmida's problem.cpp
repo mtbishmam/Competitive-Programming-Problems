@@ -114,13 +114,15 @@ int main()
     {
         int n;
         cin >> n;
-        set<int> s;
+        vi un;
         for (int i = 0; i < n; i++) {
             cin >> a[i];
-            s.em(a[i]);
+            un.eb(a[i]);
         }
+        sort(all(un));
+        un.erase(unique(all(un)), un.end());
         int id = 1;
-        for (auto i : s) mp[i] = id++;
+        for (auto& i : un) mp[i] = id++;
         for (int i = 0; i < n; i++) {
             a[i] = mp[a[i]];
             cnt[a[i]]++;
