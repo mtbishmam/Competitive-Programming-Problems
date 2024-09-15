@@ -94,7 +94,7 @@ template<class T> struct segtree {
     T query(int L, int R) { return query(L, R, 1, 1, n - 1); }
     void update(int L, int R, T cur) { update(L, R, cur, 1, 1, n - 1); }
 };
-int a[maxn], pre[maxn + 5], cnt[maxn + 5], ncnt[maxn + 5];
+int a[maxn + 5], pre[maxn + 5], cnt[maxn + 5], ncnt[maxn + 5], un[maxn + 5];
 int main()
 {
 #ifndef ONLINE_JUDGE
@@ -110,17 +110,16 @@ int main()
     // cin >> T;
     for (int Ti = 1; Ti <= T; Ti++)
     {
-        int n;
+        int n, sz = 0;
         cin >> n;
-        vi un;
         for (int i = 0; i < n; i++) {
             cin >> a[i];
-            un.eb(a[i]);
+            un[sz++] = a[i];
         }
-        sort(all(un));
-        int sz = unique(all(un)) - un.begin();
+        sort(un, un + sz);
+        sz = unique(un, un + sz) - un;
         for (int i = 0; i < n; i++) {
-            a[i] = lb(un.begin(), un.begin() + sz, a[i]) - un.begin() + 1;
+            a[i] = lb(un, un + sz, a[i]) - un + 1;
             cnt[a[i]]++;
         }
         for (int i = 1; i <= maxn + 1; i++) {
