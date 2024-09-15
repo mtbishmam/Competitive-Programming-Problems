@@ -118,9 +118,9 @@ int main()
             un.eb(a[i]);
         }
         sort(all(un));
-        un.erase(unique(all(un)), un.end());
+        int sz = unique(all(un)) - un.begin();
         for (int i = 0; i < n; i++) {
-            a[i] = lb(all(un), a[i]) - un.begin() + 1;
+            a[i] = lb(un.begin(), un.begin() + sz, a[i]) - un.begin() + 1;
             cnt[a[i]]++;
         }
         for (int i = 1; i <= maxn + 1; i++) {
