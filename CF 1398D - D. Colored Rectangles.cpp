@@ -38,7 +38,7 @@ using pll   = pair<ll, ll>  ; using vl   = vector<ll>   ; using vvl = vector<vl>
 using vi    = vector<int>   ; using vb   = vector<bool> ; using vc  = vector<char>;
 using vvi   = vector<vi>    ; using vvb  = vector<vb>   ; using vvc = vector<vc>;
 using vpii  = vector<pii>   ; using vpll = vector<pll>  ; using vs  = vector<string>;
-using vvpii = vector<vpii>  ; using tiii = tuple<int, int, int>;
+using vvpii = vector<vpii>  ; using vvvl = vector<vvl>  ; using tiii = tuple<int, int, int>;
 using vtiii = vector<tiii>  ;
 template <class A, class B> using umap = unordered_map<A, B>;
 
@@ -70,43 +70,24 @@ int main()
     {
         int a, b, c;
         cin >> a >> b >> c;
-        vi sz = {a, b, c};
-        multiset<pii, greater<pii>> ms[3];
+        vl aa(a), bb(b), cc(c);
+        cin >> aa >> bb >> cc;
+        sort(rall(aa));
+        sort(rall(bb));
+        sort(rall(cc));
 
+        vvvl dp(a + 1, vvl(b + 1, vl(c + 1, -1)));
+        function<ll(int, int, int)> f = [&](int i, int j, int k) -> ll {
+            ll& ret = dp[i][j][k];
+            if (~ret) return ret;
 
-        for (int k = 0; k < 3; k++) {
-            int x;
-            for (int i = 0; i < sz[k]; ++i) {
-                cin >> x;
-                ms[k].insert({x, k});
-            }
-        }
-        ll ans = 0;
-        while (1) {
-            vpii mx;
-            for (int i = 0; i < 3; i++) {
-                if (ms[i].size()) {
-                    mx.pb(*ms[i].begin());
-                    ms[i].erase(ms[i].begin());
-                }
-            }
-
-            if (mx.size() < 2) break;
-            sort(all(mx));
-            auto [ival, iid] = mx.back(); mx.pop_back();
-            auto [jval, jid] = mx.back(); mx.pop_back();
-            // debug(ival, iid);
-            // debug(jval, jid);
-            ans += 1ll * ival * jval;
-            if (mx.size()) {
-                auto [val, id] = mx.back();
-                // debug(val, id);
-                ms[id].insert({val, id});
-            }
-            // debug();
-        }
-        cout << ans << endl;
-
+            ret = 0;
+            if (i < a and j < b) ret = max(ret, aa[i] * bb[j] + f(i + 1, j + 1, k));
+            if (i < a and k < c) ret = max(ret, aa[i] * cc[k] + f(i + 1, j, k + 1));
+            if (j < b and k < c) ret = max(ret, bb[j] * cc[k] + f(i, j + 1, k + 1));
+            return ret;
+        };
+        cout << f(0, 0, 0) << endl;
     }
     return 0;
 }
