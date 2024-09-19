@@ -79,10 +79,24 @@ int main()
         if (r > 0) pos.eb(r);
         if (g > 0) pos.eb(g);
         if (b > 0) pos.eb(b);
-        mn = LINF; ll s(0);
-        for (ll& i : pos) mn = min(mn, i), s += i;
-        mn = min(mn, s / 3);
-        ans += mn;
+
+        sort(all(pos));
+        if (pos.size() >= 2) {
+            ll l = 0, r = 2e9, best(0);
+            ll a = pos[0], b = pos[1];
+            while (l <= r) {
+                ll mid = l + r >> 1;
+                if (b - 2 * mid >= 0 and a - mid >= 0)
+                    l = mid + 1, best = mid;
+                else r = mid - 1;
+            }
+            ans += best;
+        }
+
+        // mn = LINF; ll s(0);
+        // for (ll& i : pos) mn = min(mn, i), s += i;
+        // mn = min(mn, s / 3);
+        // ans += mn;
         cout << ans;
 
     }
