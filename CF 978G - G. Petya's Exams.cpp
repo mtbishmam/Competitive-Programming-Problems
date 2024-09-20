@@ -98,6 +98,8 @@ int main()
             auto[d, c, id] = *it;
             ms.erase(it);
 
+            if (i >= d) ok = 0;
+
             ans[i] = id;
             c--;
             if (c) ms.em(d, c, id);
@@ -106,7 +108,6 @@ int main()
                 ans[d] = k + 1;
             }
         }
-        // bug;
         if (ms.size()) ok = 0;
         for (int i = 1; i <= n; i++)
             if (exam[i]) if (ans[i] != k + 1) ok = 0;
