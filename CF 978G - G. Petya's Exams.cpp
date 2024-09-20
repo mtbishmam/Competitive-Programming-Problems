@@ -102,11 +102,14 @@ int main()
             c--;
             if (c) ms.em(d, c, id);
             else {
+                if (d <= i) ok = 0;
                 ans[d] = k + 1;
             }
         }
         // bug;
         if (ms.size()) ok = 0;
+        for (int i = 1; i <= n; i++)
+            if (exam[i]) if (ans[i] != k + 1) ok = 0;
         if (!ok) {
             cout << -1;
             continue;
