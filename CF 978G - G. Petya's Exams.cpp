@@ -91,7 +91,7 @@ int main()
             }
             if (!ms.size()) continue;
             if (exam[i]) {
-                if (exam[i] != k + 1) ok = 0;
+                if (ans[i] != k + 1) ok = 0;
                 else continue;
             }
             auto it = ms.begin();
