@@ -52,12 +52,12 @@ int main()
     for (int Ti = 1; Ti <= T; Ti++)
     {
         int n; cin >> n;
-        int k; cin >> k;
+        ll k; cin >> k;
         vl a(n);
         for (auto& i : a) cin >> i;
         sort(rall(a));
 
-        int l = 0, r = n, ans = 0;
+        int l = 1, r = n, ans = -1;
         auto chk = [&](int md) {
             vi g[md];
             for (int i = 0; i < n; i++) {
