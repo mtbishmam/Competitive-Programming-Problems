@@ -74,31 +74,67 @@ int main()
     {
         int n; cin >> n;
         string s, t; cin >> s >> t;
-        int ans = 0;
-        for (int i = 0; i < n / 2; i++) {
-            multiset<int> st, st2;
-            st.em(s[i]);
-            st.em(s[n - i - 1]);
-            st2.em(t[i]);
-            st2.em(t[n - i - 1]);
-            set<int> sst(all(st)), sst2(all(st2));
-            if (sst.size() == 1 and sst2.size() == 1) continue;
-            int cnt = 0;
-            for (auto i : st) {
-                cnt += st2.find(i) != st2.end();
-                if (st2.find(i) != st2.end())
-                    st2.erase(st2.find(i));
+        auto solve = [](string s, string t)
+        {
+            int n = s.size();
+            int ans = 0;
+            for (int i = 0; i < n / 2; i++) {
+                multiset<char> st, st2;
+                st.em(s[i]);
+                st.em(s[n - i - 1]);
+                st2.em(t[i]);
+                st2.em(t[n - i - 1]);
+
+                // set<int> fst(all(st));
+                // for (auto i : st2) fst.em(i);
+                // debug(sz(fst));
+                // if (sz(fst) == 4) ans += 2;
+                // else if (sz(fst) == 3) ans++;
+                // else if (sz(fst) == 2) {
+                //     bool sem = 1;
+                //     int cnt = 0;
+                //     vi chars{s[i], s[n - i - 1], t[i], t[n - i - 1]};
+                //     for (auto i : chars)
+                //         cnt += i == chars.front();
+                //     if (cnt == 2);
+                //     else ans++;
+                // }
+
+                set<char> sst(all(st)), sst2(all(st2));
+                if (sst.size() == 1 and sst2.size() == 1) continue;
+                int cnt = 0;
+                for (auto i : st) {
+                    cnt += st2.find(i) != st2.end();
+                    if (st2.find(i) != st2.end())
+                        st2.erase(st2.find(i));
+                }
+                ans += 2 - cnt;
+                // cout << i << " " << ans << endl;
             }
-            ans += 2 - cnt;
-            // cout << i << " " << ans << endl;
-        }
-        if (n & 1) {
-            set<int> st;
-            st.em(s[n / 2]);
-            st.em(t[n / 2]);
-            ans += st.size() != 1;
-        }
-        cout << ans << endl;
+            if (n & 1) {
+                set<char> st;
+                st.em(s[n / 2]);
+                st.em(t[n / 2]);
+                if (sz(st) == 2) ans++;
+                // ans += st.size() == 2;
+                // cout << " " << ans << endl;
+                // bug;
+            }
+            return ans;
+        };
+        // auto brute = [&](string s, string t) {
+        //     int n = s.size();
+        //     int ret = INF;
+        //     for (char a1 = 'a'; a1 <= 'z'; a1++) {
+        //         for (char a2 = 'a'; a2 <= 'z'; a2++) {
+        //             for (char a3 = 'a'; a3 <= 'z'; a3++) {
+        //                 string sa; sa += a1, sa += a2, sa += a3;
+        //                 ret = min(ret, chk(sa, s));
+        //             }
+        //         }
+        //     }
+        // }
+        cout << solve(s, t);
 
     }
     return 0;
