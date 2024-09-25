@@ -102,6 +102,10 @@ int main()
 
                 set<char> sst(all(st)), sst2(all(st2));
                 if (sst.size() == 1 and sst2.size() == 1) continue;
+                if (sst2.size() == 1) {
+                    ans++;
+                    continue;
+                }
                 int cnt = 0;
                 for (auto i : st) {
                     cnt += st2.find(i) != st2.end();
