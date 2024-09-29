@@ -71,24 +71,31 @@ int main()
         int n, m, x;
         cin >> n >> m;
         vi a(n); cin >> a;
-        vi ans(n), erased; multiset<int, greater<int>> ms(all(a));
-        int cur = accumulate(all(a), 0);
+        vi ans(n), cnt(150);
+        int cur = 0;
+        for (int i = 0; i < n; i++) cur += a[i], cnt[a[i]]++;
         for (int i = n - 1; i >= 0; i--) {
-            auto it = ms.find(a[i]);
-            ms.erase(it);
             cur -= a[i];
+            cnt[a[i]]--;
+            int prev = cur;
             if (cur + a[i] <= m) ans[i] = 0;
             else {
-                int tcur = cur;
-                while (tcur + a[i] > m and ms.size()) {
-                    tcur -= x = *ms.begin();
-                    erased.pb(x);
-                    ms.erase(ms.begin());
-                    ans[i]++;
+                int val = 100, used = 0;
+                while (cur + a[i] - cnt[val] * val > m) cur -= cnt[val] * val, used += cnt[val], val--;
+                if (cur + a[i] > m) {
+                    int l = 0, r = cnt[val], bans = 0;
+                    while (l <= r) {
+                        int mid = l + r >> 1;
+                        if (cur + a[i] - mid * val <= m) {
+                            bans = mid;
+                            r = mid - 1;
+                        } else l = mid + 1;
+                    }
+                    used += bans;
                 }
-                ms.insert(all(erased));
-                erased.clear();
+                ans[i] = used;
             }
+            cur = prev;
         }
         cout << ans << endl;
     }
