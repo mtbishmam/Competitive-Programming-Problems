@@ -68,10 +68,10 @@ int main()
     // cin >> T;
     for (int Ti = 1; Ti <= T; Ti++)
     {
-        int n, m;
+        int n, m, x;
         cin >> n >> m;
         vi a(n); cin >> a;
-        vi ans(n); multiset<int, greater<int>> ms(all(a));
+        vi ans(n), erased; multiset<int, greater<int>> ms(all(a));
         int cur = accumulate(all(a), 0);
         for (int i = n - 1; i >= 0; i--) {
             auto it = ms.find(a[i]);
@@ -80,12 +80,14 @@ int main()
             if (cur + a[i] <= m) ans[i] = 0;
             else {
                 int tcur = cur;
-                multiset<int, greater<int>> ts = ms;
-                while (tcur + a[i] > m and ts.size()) {
-                    tcur -= *ts.begin();
-                    ts.erase(ts.begin());
+                while (tcur + a[i] > m and ms.size()) {
+                    tcur -= x = *ms.begin();
+                    erased.pb(x);
+                    ms.erase(ms.begin());
                     ans[i]++;
                 }
+                ms.insert(all(erased));
+                erased.clear();
             }
         }
         cout << ans << endl;
