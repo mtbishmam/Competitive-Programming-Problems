@@ -99,7 +99,7 @@ int main()
 
         auto find = [&](int node, int k) {
             int ret = node;
-            for (int i = p2; i >= 0; i--) {
+            for (int i = p2 - 1; i >= 0; i--) {
                 if ((1 << i) <= k) {
                     k -= (1 << i);
                     ret = lca[ret][i];
