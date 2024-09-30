@@ -97,40 +97,16 @@ int main()
             }
         }
 
-        // for (int i = 1; i <= n; i++) {
-        //     debug(i, a[i], b[i]);
-        //     // cout << i << " -> ";
-        //     // for (int j = 0; j < p2; j++) {
-        //     //     cout << lca[i][j] << " ";
-        //     // }
-        //     // cout << endl;
-        // }
-
         auto find = [&](int node, int k) {
-            // debug(node, k);
-            for (int i = 0; i < p2; i++) {
-                if (k & (1 << i)) {
-                    node = lca[node][i];
-                    if (node == -1) break;
+            int ret = node;
+            for (int i = p2; i >= 0; i--) {
+                if ((1 << i) <= k) {
+                    k -= (1 << i);
+                    ret = lca[ret][i];
+                    if (ret == -1) break;
                 }
             }
-            int ret = node;
-            // debug(ret);
-            return node;
-
-            // int ret = node;
-            // debug(node, jpar);
-            // while (jpar) {
-            //     for (int i = p2; i >= 0; i--) {
-            //         if ((1 << i) <= jpar) {
-            //             jpar -= (1 << i);
-            //             ret = lca[ret][i];
-            //             debug(ret, jpar);
-            //         }
-            //     }
-            // }
-            // debug(ret);
-            // return ret;
+            return ret;
         };
 
         vl ans(n + 1);
@@ -141,17 +117,15 @@ int main()
                 int l = 0, r = n + 5, bans = 0;
                 while (l <= r) {
                     int mid = l + r >> 1;
-                    int cnode = find(i, mid);
-                    // debug(i, mid, cnode);
-                    if (cnode == -1) {
+                    int anc = find(i, mid);
+                    if (anc == -1) {
                         r = mid - 1;
                         continue;
                     }
-                    if (cnode != -1 and a[i] >= b[cnode]) {
-                        bans = cnode; r = mid - 1;
+                    if (anc != -1 and a[i] >= b[anc]) {
+                        bans = anc; r = mid - 1;
                     } else l = mid + 1;
                 }
-                // debug(i, bans);
                 ans[i] = depth[bans];
             }
             cout << ans[i] << " ";
