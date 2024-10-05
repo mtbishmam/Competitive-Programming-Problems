@@ -88,6 +88,7 @@ int main()
             }
             ans++;
             ok &= (ans < k);
+            if ((b - 1) / a >= k) ok = 0;
         }
         cout << cq[ok] << endl;
     }
