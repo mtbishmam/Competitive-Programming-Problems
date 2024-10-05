@@ -68,29 +68,69 @@ int main()
     cin.tie(NULL);
     // cout.tie(NULL);
 
+
+    vi ar;
+    auto brute = [&](int a, int b, int k) {
+        int need = lcm(a, b);
+        ar = vi(need + 5, -1);
+        if (a > b) swap(a, b);
+        for (int i = 0; i < ar.size(); i += b) {
+            if (ar[i] == -1) ar[i] = b;
+        }
+        for (int i = 0; i < ar.size(); i += a) {
+            if (ar[i] == -1) ar[i] = a;
+        }
+        int mx = 0, cur = 0;
+        for (int i = 0; i < ar.size(); i++) {
+            if (ar[i] == b) {
+                mx = max(mx, cur);
+                cur = 0;
+            }
+            cur += ar[i] == a;
+        }
+        return mx < k;
+    };
+    auto solve = [&](int a, int b, int k) {
+        bool ok = 1;
+        if (a > b) swap(a, b);
+        ll l = 0, r = 1e9, ans = 0, x = gcd(a, b);
+        while (l <= r) {
+            ll mid = l + r >> 1;
+            if (x + mid * a < b) {
+                ans = mid, l = mid + 1;
+            } else r = mid - 1;
+        }
+        ans++;
+        ok &= (ans < k);
+        if ((b - 1) / a >= k) ok = 0;
+        return ok;
+    };
+    // for (int aa = 1; aa <= 20; aa++) {
+    //     for (int bb = 1; bb <= 20; bb++) {
+    //         for (int kk = 2; kk <= 10; kk++) {
+    //             a = aa, b = bb, k = kk;
+    //             int ok1 = solve();
+    //             int ok2 = brute();
+    //             if (ok1 != ok2) {
+    //                 cout << a << " " << b << " " << k << endl;
+    //                 cout << cq[ok1] << ' ' << cq[ok2] << endl;
+    //                 for (int i = 0; i < ar.size(); i++) {
+    //                     if (ar[i] == -1) continue;
+    //                     cout << "{" << i % a << ", " << ar[i] << "}" << " ";
+    //                 }
+    //                 cout << endl;
+    //             }
+    //         }
+    //     }
+    // }
+
     int T(1);
     cin >> T;
     for (int Ti = 1; Ti <= T; Ti++)
     {
         ll a, b, k;
         cin >> a >> b >> k;
-        bool ok = 1;
-        if (a > b) swap(a, b);
-        if (gcd(a, b) == a) {
-            if ((b - 1) / a >= k) ok = 0;
-        } else {
-            ll l = 0, r = 1e9, ans = 0;
-            while (l <= r) {
-                ll mid = l + r >> 1;
-                if (1 + mid * a < b) {
-                    ans = mid, l = mid + 1;
-                } else r = mid - 1;
-            }
-            ans++;
-            ok &= (ans < k);
-            if ((b - 1) / a >= k) ok = 0;
-        }
-        cout << cq[ok] << endl;
+        cout << cq[solve(a, b, k)] << endl;
     }
     return 0;
 }
