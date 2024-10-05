@@ -76,7 +76,7 @@ int main()
         cin >> a >> b >> k;
         bool ok = 1;
         if (a > b) swap(a, b);
-        if (gcd(a, b) != 1) {
+        if (gcd(a, b) == a) {
             if ((b - 1) / a >= k) ok = 0;
         } else {
             ll l = 0, r = 1e9, ans = 0;
