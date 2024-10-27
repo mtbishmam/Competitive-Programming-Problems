@@ -95,10 +95,11 @@ int main()
             if (~ret) return ret;
 
             ret = 1e6;
-            for (int cur = x; cur <= y; cur++) {
-                // cout << get(i, i + cur - 1, j) << endl;
-                ret = min(ret, get(i, i + cur - 1, j) + f(i + cur, j ^ 1));
-            }
+            for (int cur = x; cur <= y; cur++)
+                if (i + cur <= m) {
+                    // cout << get(i, i + cur - 1, j) << endl;
+                    ret = min(ret, get(i, i + cur - 1, j) + f(i + cur, j ^ 1));
+                }
             return ret;
         };
         cout << min(f(0, 0), f(0, 1));
