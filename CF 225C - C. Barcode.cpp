@@ -81,7 +81,7 @@ int main()
             cost[i] += cost[i - 1];
         // cout << cost << endl;
 
-        ll dp[m][2];
+        int dp[m][2];
         memset(dp, -1, sizeof dp);
         auto get = [&](int i, int j, int k) {
             int ret = 0, len = j - i + 1;
@@ -89,9 +89,9 @@ int main()
             else ret += (len * n) - (cost[j] - (i - 1 < 0 ? 0 : cost[i - 1]));
             return ret;
         };
-        function<ll(int, int)> f = [&](int i, int j) -> ll {
+        function<int(int, int)> f = [&](int i, int j) -> int {
             if (i == m) return 0;
-            ll& ret = dp[i][j];
+            int& ret = dp[i][j];
             if (~ret) return ret;
 
             ret = 1e6;
