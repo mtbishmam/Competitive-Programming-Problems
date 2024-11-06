@@ -61,7 +61,7 @@ const int MOD = 1000000007;
 const int maxn = 2e5 + 10;
 //mt19937 rng(chrono::system_clock::now().time_since_epoch().count());
 
-vector<int> par(maxn), mn(maxn), mx(maxn), sz(maxn, 1);
+vector<int> par(maxn), mn(maxn), mx(maxn);
 vector<bool> vis(maxn);
 
 int find(int x) { return x == par[x] ? x : par[x] = find(par[x]); }
@@ -72,9 +72,8 @@ void unite(int x, int y)
     if (x != y)
     {
         par[x] = y;
-        sz[y] += sz[x];
         mn[y] = min(mn[x], mn[y]);
-        mx[x] = max(mx[x], mx[y]);
+        mx[y] = max(mx[x], mx[y]);
     }
 }
 
