@@ -48,21 +48,24 @@ template <class A, class B> using umap = unordered_map<A, B>;
 
 const int dx[8] = { -1,  0, 0, 1, 1,  1, -1, -1};
 const int dy[8] = { 0, -1, 1, 0, 1, -1,  1, -1};
-const int INF = 2147483647;
+const int INF = 1e6;
 const ll LINF = 9223372036854775807;
 const int MOD = 1e9 + 7;
 const int maxn = 1e5 + 1;
 
 struct dsu {
     int n;
-    vi sz, par;
-    dsu(int _n) : n(_n), sz(n, 1), par(n, -1) {}
+    vi sz, par, mx, mn;
+    dsu(int _n) : n(_n), sz(n, 1), par(n, -1), mx(n, -1), mn(n, INF) {}
     int find(int x) { return (par[x] == -1 ? x : par[x] = find(par[x])); }
     int unite(int a, int b) {
+        int oa = a, ob = b;
         a = find(a), b = find(b);
         if (a != b) {
             if (sz[a] < sz[b]) swap(a, b);
             par[b] = a;
+            mx[b] = max({mx[b], ob, oa});
+            mn[b] = min({mn[b], ob, oa});
             sz[a] += sz[b];
             return 1;
         }
@@ -91,26 +94,24 @@ int main()
         for (int i = 0, x, y; i < m; i++)
             cin >> x >> y, ds.unite(x, y);
 
-        vvi g(n + 5);
-        for (int i = 1; i <= n; i++) {
-            int grp = ds.find(i);
-            g[grp].eb(i);
-        }
+        vi gr(n + 5);
+        vi grpos(n + 5);
+        for (int i = 1; i <= n; i++)
+            gr[i] = ds.find(i), grpos[gr[i]] = i;
         int ans(0);
         for (int i = 1; i <= n; i++) {
-            vi& b = g[i];
-            sort(all(b));
-            // cout << b << endl;
-            for (int j = 0; j + 1 < b.size(); j++) {
-                if (b[j] + 1 != b[j + 1]) {
-                    for (int k = b[j] + 1; k < b[j + 1]; k++) {
-                        if (ds.unite(b[j], k)) ans++;
-                    }
-
-                }
-            }
+            if (i + 1 <= n and gr[i] != gr[i + 1] and grpos[gr[i]] >= i + 1)
+                ans += ds.unite(gr[i], gr[i + 1]);
         }
-        cout << ans << endl;
+        cout << ans;
+        // vvi g(n + 5);
+        // for (int i = 1; i <= n; i++) {
+        //     int grp = ds.find(i);
+        //     int mx = ds.mx[grp], mn = ds.mn[grp];
+        //     if(mx - mn + 1 != ds.sz[grp]) {
+
+        //     }
+        // }
 
     }
     return 0;
