@@ -64,8 +64,8 @@ struct dsu {
         if (a != b) {
             if (sz[a] < sz[b]) swap(a, b);
             par[b] = a;
-            mx[a] = max({mx[a], ob, oa});
-            mn[a] = min({mn[a], ob, oa});
+            mx[a] = max({mx[a], ob, oa, mx[b]});
+            mn[a] = min({mn[a], ob, oa, mn[b]});
             sz[a] += sz[b];
             return 1;
         }
@@ -113,14 +113,16 @@ int main()
         for (int i = 1; i <= n; i++) {
             int cgr = ds.find(i);
             if (ds.sz[cgr] > 1) {
-                int mn = ds.mn[cgr];
-                int mx = ds.mx[cgr];
                 while (1) {
+                    int mx = ds.mx[cgr];
+                    int mn = ds.mn[cgr];
                     auto it = s.lb(mn);
                     if (it == s.end() or * it > mx) break;
-                    ans += ds.unite(cgr, *it);
+                    ans += ds.unite(mn, *it);
                     s.erase(it);
                 }
+                // for (auto i : s) cout << i << " ";
+                // cout << endl;
             }
         }
         cout << ans;
