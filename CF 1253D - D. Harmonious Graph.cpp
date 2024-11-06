@@ -64,8 +64,8 @@ struct dsu {
         if (a != b) {
             if (sz[a] < sz[b]) swap(a, b);
             par[b] = a;
-            mx[b] = max({mx[b], ob, oa});
-            mn[b] = min({mn[b], ob, oa});
+            mx[a] = max({mx[a], ob, oa});
+            mn[a] = min({mn[a], ob, oa});
             sz[a] += sz[b];
             return 1;
         }
@@ -96,14 +96,50 @@ int main()
 
         vi gr(n + 5);
         vi grpos(n + 5);
+        vb used(n + 5);
+        vi ass(n + 5);
         for (int i = 1; i <= n; i++)
-            gr[i] = ds.find(i), grpos[gr[i]] = i;
+            if (!used[ds.find(i)] and ds.sz[ds.find(i)] >= 2) {
+                gr[i] = ds.find(i);
+                grpos[gr[i]] = i;
+                used[gr[i]] = 1;
+                // cout << ds.mn[gr[i]] << endl;
+                ass[ds.mn[gr[i]]] = gr[i];
+                ass[ds.mx[gr[i]]] = gr[i];
+            }
         int ans(0);
+        set<int> s;
+        for (int i = 1; i <= n; i++) s.e(i);
         for (int i = 1; i <= n; i++) {
-            if (i + 1 <= n and gr[i] != gr[i + 1] and grpos[gr[i]] >= i + 1)
-                ans += ds.unite(gr[i], gr[i + 1]);
+            int cgr = ds.find(i);
+            if (used[cgr]) {
+                int mn = ds.mn[cgr];
+                int mx = ds.mx[cgr];
+                while (1) {
+                    auto it = s.lb(mn);
+                    if (it == s.end() or * it > mx) break;
+                    ans += ds.unite(cgr, *it);
+                    s.erase(it);
+                }
+            }
         }
         cout << ans;
+        // for (int i = 1; i <= n; i++)
+        //     if (ass[i]) {
+        //         int j = i + 1;
+        //         while (j <= n and ass[j] != ass[i]) {
+        //             ans += ds.unite(ass[j], ass[i]);
+        //             j++;
+        //         }
+        //         i = j - 1;
+        //     }
+        // cout << ans;
+        // for (int i = 1; i <= n; i++) {
+        //     if (used[gr[i]] and used[gr[i + 1]])
+        //         if (i + 1 <= n and gr[i] != gr[i + 1] and grpos[gr[i]] >= i + 1)
+        //             ans += ds.unite(gr[i], gr[i + 1]);
+        // }
+        // cout << ans;
         // vvi g(n + 5);
         // for (int i = 1; i <= n; i++) {
         //     int grp = ds.find(i);
