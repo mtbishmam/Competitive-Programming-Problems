@@ -94,25 +94,25 @@ int main()
         for (int i = 0, x, y; i < m; i++)
             cin >> x >> y, ds.unite(x, y);
 
-        vi gr(n + 5);
-        vi grpos(n + 5);
-        vb used(n + 5);
-        vi ass(n + 5);
-        for (int i = 1; i <= n; i++)
-            if (!used[ds.find(i)] and ds.sz[ds.find(i)] >= 2) {
-                gr[i] = ds.find(i);
-                grpos[gr[i]] = i;
-                used[gr[i]] = 1;
-                // cout << ds.mn[gr[i]] << endl;
-                ass[ds.mn[gr[i]]] = gr[i];
-                ass[ds.mx[gr[i]]] = gr[i];
-            }
+        // vi gr(n + 5);
+        // vi grpos(n + 5);
+        // vb used(n + 5);
+        // vi ass(n + 5);
+        // for (int i = 1; i <= n; i++)
+        //     if (!used[ds.find(i)]) {
+        //         gr[i] = ds.find(i);
+        //         grpos[gr[i]] = i;
+        //         used[gr[i]] = 1;
+        //         // cout << ds.mn[gr[i]] << endl;
+        //         ass[ds.mn[gr[i]]] = gr[i];
+        //         ass[ds.mx[gr[i]]] = gr[i];
+        //     }
         int ans(0);
         set<int> s;
         for (int i = 1; i <= n; i++) s.e(i);
         for (int i = 1; i <= n; i++) {
             int cgr = ds.find(i);
-            if (used[cgr]) {
+            if (ds.sz[cgr] > 1) {
                 int mn = ds.mn[cgr];
                 int mx = ds.mx[cgr];
                 while (1) {
