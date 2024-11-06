@@ -62,6 +62,7 @@ const int maxn = 2e5 + 10;
 //mt19937 rng(chrono::system_clock::now().time_since_epoch().count());
 
 vector<int> par(maxn), mn(maxn), mx(maxn), sz(maxn, 1);
+vector<bool> vis(maxn);
 
 int find(int x) { return x == par[x] ? x : par[x] = find(par[x]); }
 
@@ -91,12 +92,11 @@ void solve()
     for (int i = 1; i <= n; i++)
     {
         int x = find(i);
-        if (sz[x] >= 3)
+        if (!vis[x])
         {
-            for (int j = mn[x] + 1; j <= mx[x]; j++)
-                if (x == find(j))
-                    ;
-                else
+            vis[x] = 1;
+            for (int j = mn[x]; j <= mx[x]; j++)
+                if (x != find(j))
                     unite(j, x), ans++;
         }
     }
