@@ -90,7 +90,7 @@ int main()
                 }
                 int x = a[i];
                 while (x != 1 and x)  {
-                    x = x / a[n];
+                    x = (x + a[n] - 1) / a[n];
                     cur++;
                     ops.eb(i, n);
                 }
@@ -98,14 +98,14 @@ int main()
             }
             int x = a[n];
             while (x != 1 and x) {
-                x = x / rem;
+                x = (x + rem - 1) / rem;
                 cur++;
                 ops.eb(n, rem);
             }
 
             x = rem;
             while (x != 1 and x) {
-                x = x / 2;
+                x = (x + 1) / 2;
                 cur++;
                 ops.eb(rem, 2);
             }
