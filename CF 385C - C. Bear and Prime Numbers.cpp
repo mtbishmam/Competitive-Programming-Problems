@@ -54,7 +54,7 @@ const int MOD = 1e9 + 7;
 const int maxn = 1e7 + 100;
 // int spf[maxn + 100], cnt[maxn + 100], pre[maxn + 100];
 int con[maxn + 100], cnt[maxn + 100];
-vb isprime(maxn + 100, 1);
+vb isprime(maxn, 1);
 
 int main()
 {
@@ -98,8 +98,10 @@ int main()
         //     }
         // }
         for (int i = 2; i < maxn; i += 2) {
-            con[2] += cnt[i];
-            if (i != 2) isprime[i] = 0;
+            if (cnt[i]) {
+                con[2] += cnt[i];
+                if (i != 2) isprime[i] = 0;
+            }
         }
         for (int i = 3; i * i < maxn; i += 2)
             if (isprime[i])
