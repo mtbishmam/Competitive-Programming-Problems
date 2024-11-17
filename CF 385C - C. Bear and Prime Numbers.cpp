@@ -97,21 +97,17 @@ int main()
         //             x /= y;
         //     }
         // }
-        isprime[0] = isprime[1] = 0;
         for (int i = 2; i < maxn; i += 2) {
             con[2] += cnt[i];
             if (i != 2) isprime[i] = 0;
         }
         for (int i = 3; i * i < maxn; i += 2)
             if (isprime[i])
-                for (int j = i; j < maxn; j += i) {
-                    con[i] += cnt[j];
-                    if (i != j) isprime[j] = 0;
-                }
-
-        // for (int i = 0; i < maxn; ++i)
-        //     if (isprime[i]) cout << i << " ";
-        // cout << endl;
+                for (int j = i; j < maxn; j += i)
+                    if (cnt[j]) {
+                        con[i] += cnt[j];
+                        if (i != j) isprime[j] = 0;
+                    }
 
         // for (int i = 0; i < n; i++)
         //     cout << a[i] << " " << cnt[a[i]] << endl;
