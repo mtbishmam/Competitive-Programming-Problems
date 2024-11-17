@@ -52,9 +52,7 @@ const int INF = 2147483647;
 const ll LINF = 9223372036854775807;
 const int MOD = 1e9 + 7;
 const int maxn = 1e7 + 100;
-// int spf[maxn + 100], cnt[maxn + 100], pre[maxn + 100];
-int con[maxn + 100], cnt[maxn + 100];
-vb isprime(maxn, 1);
+int spf[maxn + 100], cnt[maxn + 100], pre[maxn + 100];
 
 int main()
 {
@@ -73,81 +71,39 @@ int main()
     {
         int n;
         cin >> n;
-        vi a(n);
-        for (int i = 0; i < n; i++)
-            cin >> a[i], cnt[a[i]]++;
-        // for (int i = 0; i < maxn; i++)
-        //     spf[i] = i;
-        // for (int i = 2; i < maxn; i += 2)
-        //     spf[i] = 2;
-        // for (int i = 3; i * i < maxn; i += 2) {
-        //     if (spf[i] == i) {
-        //         for (int j = i * i; j < maxn; j += 2 * i)
-        //             if (spf[j] == j)
-        //                 spf[j] = i;
-        //     }
-        // }
-
-        // for (int i = 0; i < n; i++) {
-        //     int x = a[i];
-        //     while (x != 1) {
-        //         cnt[spf[x]]++;
-        //         int y = spf[x];
-        //         while (x % y == 0)
-        //             x /= y;
-        //     }
-        // }
-        for (int i = 2; i < maxn; i += 2) {
-            if (cnt[i]) {
-                con[2] += cnt[i];
-                if (i != 2) isprime[i] = 0;
+        vi a(n); cin >> a;
+        for (int i = 0; i < maxn; i++)
+            spf[i] = i;
+        for (int i = 2; i < maxn; i += 2)
+            spf[i] = 2;
+        for (int i = 3; i * i < maxn; i += 2) {
+            if (spf[i] == i) {
+                for (int j = i * i; j < maxn; j += 2 * i)
+                    if (spf[j] == j)
+                        spf[j] = i;
             }
         }
-        for (int i = 3; i * i < maxn; i += 2)
-            if (isprime[i])
-                for (int j = i; j < maxn; j += i)
-                    if (cnt[j]) {
-                        con[i] += cnt[j];
-                        if (i != j) isprime[j] = 0;
-                    }
 
-        // for (int i = 0; i < n; i++)
-        //     cout << a[i] << " " << cnt[a[i]] << endl;
-
-        vpii pre;
-        sort(all(a));
-        pre.eb(0, 0);
-        for (int i = 2; i < maxn; i++) {
-            if (isprime[i]) {
-                int prev = pre.back().ss;
-                pre.eb(i, con[i]);
-                pre.back().ss += prev;
+        for (int i = 0; i < n; i++) {
+            int x = a[i];
+            while (x != 1) {
+                cnt[spf[x]]++;
+                int y = spf[x];
+                while (x % y == 0)
+                    x /= y;
             }
         }
-        // for (int i = 0; i < a.size(); i++)
-        //     if (cnt[a[i]]) {
-        //         int prev = pre.back().ss;
-        //         pre.eb(a[i], con[a[i]]);
-        //         pre.back().ss += prev;
-        //         cnt[a[i]] = 0;
-        //     }
-
-        // for (int i = 0; i < pre.size(); i++)
-        //     cout << pre[i].ff << " " << pre[i].ss << endl;
-
-        // for (int i = 1; i <= maxn; ++i)
-        //     pre[i] += pre[i - 1] + cnt[i];
+        for (int i = 1; i <= maxn; ++i)
+            pre[i] += pre[i - 1] + cnt[i];
 
         int q;
         cin >> q;
         while (q--) {
             int l, r;
             cin >> l >> r;
-            auto it = lower_bound(all(pre), pii{l, 0});
-            auto jt = upper_bound(all(pre), pii{r, INF});
-            l = it - pre.begin();
-            r = jt - pre.begin();
-            cout << pre[r - 1].ss - pre[l - 1].ss << endl;
+            r = min(r, maxn);
+            l = min(l, maxn);
+            cout << pre[r] - pre[l - 1] << endl;
         }
     }
     return 0;
