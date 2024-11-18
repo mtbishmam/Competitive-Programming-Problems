@@ -81,6 +81,7 @@ int main()
         function<ll(int, int, int)> f = [&](int i, int j, int k) -> ll {
             if (i == 1) return 0;
             ll& ret = dp[i][j][k];
+            if (~ret) return ret;
             ret = MOD;
             if (j == 0) ret = min(ret, a[i] + min(f(i - 1, 0, 0), f(i - 1, 1, 0)));
             else {
