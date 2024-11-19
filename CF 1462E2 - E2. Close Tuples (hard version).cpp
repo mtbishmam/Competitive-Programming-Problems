@@ -99,43 +99,20 @@ int main()
         };
 
         sort(all(a));
-        ll ans(0); int s, e, ps, pe(-1);
+        ll ans(0); int j, p(0);
         map<int, int> vis;
         for (int i = 0; i < n; ++i) {
             if (!vis[a[i]]) {
                 vis[a[i]] = 1;
                 auto it = ub(all(a), a[i] + k);
-                it--;
-                s = i, e = it - a.begin();
-                int len = it - (a.begin() + i) + 1;
-                ans = (ans + ncr(len, m)) % MOD;
-                if (pe != -1) {
-                    int nlen = pe - s + 1;
-                    ans = (ans - ncr(nlen, m) % MOD) + MOD;
-                    ans %= MOD;
-                }
-                ps = s, pe = e;
-                // cout << len << endl;
-                // if (len > 2 and len - 2 >= m - 2)
-                //     ans = (ans + npr(len - 2, m - 2)) % MOD;
+                j = it - a.begin();
+                ans = (ans + ncr(j - i, m)) % MOD;
+                ans = (ans - ncr(p - i, m)) % MOD + MOD;
+                ans = ans % MOD;
+                p = j;
             }
         }
         cout << ans << endl;
-        // ll ans(0);
-        // int lst(0);
-        // map<int, int> mp; // n >= 1, m >= 1, k >= 1
-        // for (int i = 0, j = 0; i < n; i++) {
-        //     while (!mp.size() or (j < n and mp.rbegin()->ff - mp.begin()->ff <= k)) {
-        //         lst = j - i + 1;
-        //         mp[a[j]]++;
-        //         j++;
-        //     }
-        //     if (lst >= m) ans = (ans + ncr(lst, m)) % MOD;
-        //     lst = 0;
-        //     mp[a[i]]--;
-        //     if (!mp[a[i]]) mp.erase(a[i]);
-        // }
-        // cout << ans << endl;
     }
     return 0;
 }
