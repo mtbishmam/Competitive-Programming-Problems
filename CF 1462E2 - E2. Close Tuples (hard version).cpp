@@ -51,7 +51,8 @@ const int dy[8] = { 0, -1, 1, 0, 1, -1,  1, -1};
 const int INF = 2147483647;
 const ll LINF = 9223372036854775807;
 const int MOD = 1e9 + 7;
-const int maxn = 1e5 + 1;
+const int maxn = 2e5 + 1;
+ll fact[maxn], ifact[maxn];
 
 int main()
 {
@@ -64,6 +65,28 @@ int main()
     cin.tie(NULL);
     // cout.tie(NULL);
 
+    auto pw = [](ll a, ll b) {
+        ll ret(1);
+        while (b) {
+            if (b & 1) ret = ret * a % MOD;
+            a = a * a % MOD;
+            b >>= 1;
+        }
+        return ret;
+    };
+
+    fact[0] = 1;
+    for (int i = 1; i < maxn; i++)
+        fact[i] = fact[i - 1] * i % MOD;
+    ifact[maxn - 1] = pw(fact[maxn - 1], MOD - 2);
+    for (int i = maxn - 2; i >= 0; i--)
+        ifact[i] = ifact[i + 1] * (i + 1) % MOD;
+
+    auto C = [&](int n, int r) -> ll {
+        if (r > n or r < 0) return 0;
+        return fact[n] * ifact[r] % MOD * ifact[n - r] % MOD;
+    };
+
     int ttt(1);
     cin >> ttt;
     for (int itt = 1; itt <= ttt; itt++)
@@ -71,48 +94,20 @@ int main()
         int n, m, k;
         cin >> n >> m >> k;
         vi a(n); cin >> a;
-        // cout << a << endl;
-        auto bpow = [&](ll a, ll b) {
-            ll ret(1);
-            while (b) {
-                if (b & 1) ret = ret * a % MOD;
-                a = a * a % MOD;
-                b >>= 1;
-            }
-            return ret;
-        };
-        ll fact[n + 1], ifact[n + 1];
-        fact[0] = fact[1] = 1;
-        for (int i = 2; i <= n; i++)
-            fact[i] = fact[i - 1] * i % MOD;
-        ifact[n] = bpow(fact[n], MOD - 2);
-        for (int i = n - 1; i >= 0; i--)
-            ifact[i] = ifact[i + 1] * (i + 1) % MOD;
-
-        auto ncr = [&](int n, int r) -> ll {
-            if (n < r or r < 0) return 0;
-            return (fact[n] * ifact[r] % MOD) * ifact[n - r] % MOD;
-        };
-        auto npr = [&](int n, int r) -> ll {
-            if (n < r or r < 0) return 0;
-            return fact[n] * ifact[n - r] % MOD;
-        };
-
         sort(all(a));
-        ll ans(0); int j, p(0);
-        map<int, int> vis;
-        for (int i = 0; i < n; ++i) {
-            if (!vis[a[i]]) {
-                vis[a[i]] = 1;
-                auto it = ub(all(a), a[i] + k);
-                j = it - a.begin();
-                ans = (ans + ncr(j - i, m)) % MOD;
-                ans = (ans - ncr(p - i, m)) % MOD + MOD;
-                ans = ans % MOD;
-                p = j;
-            }
+        // cout << a << endl;
+
+
+        ll ans(0);
+        for (int i = 0; i < n; i++) {
+            auto it = ub(all(a), a[i] + k);
+            it--;
+            int len = (it - a.begin()) - i + 1;
+            // cout << len << endl;
+            ans = (ans + C(len - 1, m - 1)) % MOD;
         }
         cout << ans << endl;
+        // cout << endl;
     }
     return 0;
 }
